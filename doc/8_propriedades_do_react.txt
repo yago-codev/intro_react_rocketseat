@@ -1,0 +1,157 @@
+01) O que faremos a seguir é separar o <li>, 
+    tornando-o um componente próprio. 
+
+    Dentro desse contexto de listagem de tecnlogias, 
+    ainda não temos nenhuma complexidade na lógica do componente, 
+    mas mesmo assim iremos separar-lo em um componente somente para exercitarmos. 
+
+    Portando a próxima coisa a ser feita
+    é criarmos um componente chamado 
+    TechItem.js
+    que ficará dentro da pasta components
+
+02) Como esse componente não terá estado, 
+    ou seja, 
+    como esse componente não irá receber a variável state, 
+    criaremos ele no formato de função:
+
+    import React from 'react';
+
+    function TechItem {
+      return(
+        
+      );
+    }
+
+03) Dentro da função return(), 
+    iremos inserir o li:
+
+    function TechItem {
+      return(
+        <li key={tech}>
+          {tech}
+          <button onClick={() => this.handleDelete(tech)} type="button">Remover</button>
+        </li>
+      );
+    }
+
+04) Agora iremos exportar o componente:
+
+    export default TechItem;
+
+05) Dentro do componente TechList iremos importar o TechItem:
+
+    import TechItem from './TechItem';
+
+06) Agora iremos inserir-lo entre o map que está sendo feito dentro da ul:
+
+    <ul>
+      {this.state.techs.map(tech => (
+        <TechItem /> <==
+      ))}
+    </ul>
+
+07) A primeira coisa a ser corrigida após termos tornado o <li> em um componente 
+    é inserirmos uma propriedade chamada key dentro do componente TechItem:
+
+    <ul>
+      {this.state.techs.map(tech => (
+        <TechItem key={tech} />
+      ))}
+    </ul>
+
+08) Tendo inserido a propriedade key={} dentro do componente TechItem,
+    precisaremos passar a propriedade tech que está dentro do nosso estado 
+    como uma propriedade para o compoente. 
+
+    Ou seja, 
+    quando temos um componente isolado,
+    ao importarmos ele dentro de outro componente, 
+    ele não será capaz de enxergar as variáveis que foram definidas
+    dentro desse componente para o qual foi importado. 
+
+    É aí que entra o conceito de propriedades do React.
+    Propriedades são tudo aquilo que passamos pro componente, 
+    dentro de sua respectiva tag. 
+
+    <ul>
+      {this.state.techs.map(tech => (
+        <TechItem key={tech} tech={tech}/>
+      ))}
+    </ul>
+
+    Ou seja, 
+    essa variável que foi passada como 
+    valor para a propriedade do componente TechItem é 
+    a variável que está sendo percorrida no map.
+    E quem são essas varáveis percorridas no map()?
+    São os valores contidos dentro do array techs. 
+
+09) Agora precisaremos passar essa mesma variável tech como parâmetro para
+    o componente funcional presente no arquivo TechItem.
+
+    Para isso, poderemos utilizar a desestruturação:
+
+    function TechItem({ tech }) { <==
+      return(
+        <li key={tech}>
+          {tech}
+          <button onClick={() => this.handleDelete(tech)} type="button">Remover</button>
+        </li>
+      );
+    }
+
+10) Agora dentro do arquivo TechItem.js, 
+    precisaremos resolver o this.handleDelete,
+    pois como tiramos o componente funcional de dentro do componente de classe,
+    esse this não estará mais se referindo as propriedades do state, 
+    e consequentemente o componente funcional não conhece o método handleDelete.
+
+    Para corrigirmos isso, 
+    precisaremos criar uma propriedade onde 
+    iremos passar como valor o método handleDelete.
+
+    Essa propriedade irá se chamar
+    onDelete:
+
+    <ul>
+      {this.state.techs.map(tech => (
+        <TechItem key={tech} tech={tech} onDelete={this.handleDelete} /> <==
+      ))}
+    </ul>
+
+11) Agora iremos criar a função de 
+    deleção, dentro da prop onDelete:
+
+    <ul>
+      {this.state.techs.map(tech => (
+        <TechItem key={tech} tech={tech} onDelete={() => this.handleDelete(tech)} />
+      ))}
+    </ul>
+
+12) Agora dentro do componente TechItem, 
+    iremos receber a propriedade onDelete como parâmetro:
+
+    function TechItem({ tech, onDelete }) { <==
+      return(
+        <li key={tech}>
+          {tech}
+          <button onClick={() => this.handleDelete(tech)} type="button">Remover</button>
+        </li>
+      );
+    }
+
+13) Agora dentro da propriedade onClick basta passarmos o onDelete como parâmetro:
+
+    function TechItem({ tech, onDelete }) {
+      return(
+        <li key={tech}>
+          {tech}
+          <button onClick={onDelete} type="button">Remover</button> <==
+        </li>
+      );
+    }
+
+
+
+

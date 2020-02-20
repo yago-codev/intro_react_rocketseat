@@ -1,0 +1,115 @@
+01) Entendendo default props e 
+    PropTypes. 
+
+    Inicialmente, 
+    vamos supor dentro desse contexto de default props, 
+    que o usuário está chamando o componente TechItem sem passar a propriedade tech:
+
+    function TechItem({ tech, onDelete }) {
+      return(
+        <li key={tech}>
+          {tech}
+          <button onClick={onDelete} type="button">Remover</button>
+        </li>
+      );
+    }
+
+    O que faríamos nesse caso?
+    Existem algumas formas de resolver isso. 
+
+    A primeira delas seria atribuindo um valor default diretamente no atributo que está 
+    sendo passado como parâmetro pro componente funcional:
+
+    function TechItem({ tech = 'default', onDelete }) { <==
+      return(
+        <li key={tech}>
+          {tech}
+          <button onClick={onDelete} type="button">Remover</button>
+        </li>
+      );
+    }
+
+    ...
+
+    Mas além dessa solução, 
+    nós temos outra abordagem, 
+    que é uma espécie de forma global de resolvermos esse problema, 
+    chamada de DEFAULT PROPS.
+
+    Basta pegarmos qualquer componente, 
+    sendo de classe ou função, 
+    e dentro do componente iremos modificar uma propriedade chamada
+    defaultProps:
+
+    TechItem.defaultProps = {
+      tech: 'Oculto',
+    };
+
+    Ou seja, 
+    estamos setando um valor de string para tech.
+    Um valor padrão/default. 
+
+02) Agora que setamos o defaultProps no componente TechItem,
+    iremos até o componente TechList,
+    e dentro do método return() iremos incluir um componente TechItem, 
+    sem passarmos nenhuma propriedade.
+
+    Quando o componente for renderizado, 
+    automaticamente ele será carregado com o valor que inserimos em defaultProps.
+        
+    <ul>
+      {this.state.techs.map(tech => (
+        <TechItem key={tech} tech={tech} onDelete={() => this.handleDelete(tech)} />
+      ))}
+      < TechItem />
+    </ul>
+
+03) Aplicando defaultProps em componentes de classe:
+
+    Nos componentes de classe, 
+    precisaremos utilizar uma sintaxe diferente para definir essa propriedade, já que ela é estática. 
+
+    Logo após a abertura das chaves definidas na Classe, 
+    iremos criar:
+
+      static defaultProps = {
+
+      };
+
+04) As PropTypes são formas de validar as propriedades que 
+    o nosso componente recebe.
+
+    Vamos imaginar que por algum motivo, 
+    um desenvolvedor tenha passado ao invés de uma função, 
+    um texto para dentro da propriedade onClick={}.
+    Como o React vai lidar com isso?
+
+    Seria legal que o React avisasse ao desenvolvedor que ele está passando um 
+    formato incorreto para dentro da prop. 
+
+    Para fazermos isso, precisaremos instalar uma biblioteca chamada prop-types.
+    A biblioteca será importada dentro do arquivo TechItem
+
+    yarn add prop-types
+
+    import Proptypes from 'prop-types';
+
+05) Agora iremos utilizar o PropTypes para validar o valor da prop.
+
+    TechItem.propTypes = {
+      tech: PropTypes.string,
+      onDelete: PropTypes.func.isRequired, <-- a prop onDelete deve ser uma função e a prop é obrigatória. 
+    };
+
+06) Agora iremos até o componente TechList, 
+    e iremos redeclarar o compoente TechItem. 
+
+    Quando inspecionarmos o console do navegador, 
+    perceberemos que um warning está sendo emitido. 
+    Esse warning está aparecendo porque determinamos através do PropTypes que o 
+    componente TechItem deverá receber obrigatoriamente a propriedade onDelete.
+
+    Ou seja, 
+    o compoente deverá ser declarado assim:
+
+    <TechItem onDelete={() => this.handleDelete(tech)} />

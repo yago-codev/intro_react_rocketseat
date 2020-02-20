@@ -1,0 +1,126 @@
+01) O ciclo de vida de um componente pode ser compreendido como 
+    sendo alguns métodos que temos dentro do componente de classe.
+
+    Quais seriam esses métodos do ciclo de vida do componente?
+
+    // executado assim que o componente aparece em tela. 
+    // ou seja, através desse método de ciclo de vida, 
+    // podemos controlar o que vai acontecer imediatamente quando o componente for renderizado.
+    componentDidMount() {
+      ...
+    }
+
+    // executado sempre que houver alterações nas props ou estado
+    // essas propriedades/estados que serão alterados devem ser recebidos por parâmetro. 
+    // se houver alguma alteracão nas props, iremos acessar as novas props com this.props
+    // se houver alteração no estado, iremos acessar essas novas alterações com this.state
+    // como fazemos pra acessar as infos antes que elas tenham recebido essas alterações?
+    // iremos passar como parâmetro as props antigas/ state antigo, conforme o exemplo abaixo
+    componentDidUpdate(prevProps, prevState) {
+      // agora basta comparar as props/estados antigos com as props/estado atual...
+    }
+
+    // executado quando o componente deixa de existir. 
+    componentWillUnmount() {
+
+    }
+
+02) Praticando os métodos do ciclo de vida:
+
+    O que faremos a seguir é salvar os dados da listagem de tecnologias
+    dentro do LocalStorage do navegador. 
+
+    Portanto a primeira coisa que faremos dentro do 
+    componente TechList é remover o conjunto de strings que foram 
+    atribúidas a propriedade techs, 
+    deixando o array vazio:
+
+    state = {
+      newTech: '',
+      techs: []
+    };
+
+03) Agora iremos fazer o seguinte, 
+    toda vez que houver uma alteracão nesse estado(prop techs), 
+    iremos salvar isso no LocalStorage.
+
+    Para fazermos isso, 
+    iremos operar com o método 
+    componentDidUpdate()
+
+    Porque?
+    Porque esse método é executado toda vez que o nosso estado for alterado. 
+
+      componentDidUpdate(_, prevState) {
+
+      }
+
+    OBS: esse underline passado como primeiro parâmetro serve para 
+    especificar que não estaremos utilizando o prevProps,
+    utilizaremos somente o prevState. 
+
+    ...
+
+    Agora precisaremos fazer uma comparação entre os estados:
+    Iremos fazer a comparação entre as props techs, 
+    pois caso comparássemos a prop newTech,
+    iríamos esbarrar em um erro.
+    Esse erro iria acontecer porque a 
+    prop newTech está atrelada a um evento/função que irá 
+    capturar cada letra digitada no input. 
+    Ou seja, 
+    toda vez que uma letra for digitada, 
+    a função componentDidUpdate() será executada. 
+    Para solucionarmos isso corretamente, 
+    iremos fazer essa verificação na prop techs, 
+    pois é ela quem irá receber o envio do conteúdo do input
+    somente após a submissão/clique no botão de enviar, 
+    fazendo com que o componentDidUpdate() seja executado somente uma vez a 
+    cada nova inserção de tecnlogia. 
+
+      componentDidUpdate(_, prevState) {
+        if (prevState !== this.state.techs) {
+          
+        }
+      }
+
+      Acima estamos comparando as props. 
+      Se a prop for modificada,
+      ou seja, 
+      quando o usuario clicar no submit para enviar o cadastro de 
+      uma nova tecnlogia, 
+      iremos setar esses dados no LocalStorage.
+
+      ...
+
+        componentDidUpdate(_, prevState) {
+          if (prevState !== this.state.techs) {
+            localStorage.setItem('techs', JSON.stringify(this.state.techs));
+          }
+        }
+
+    OBS: o localStorage não aceita arrays, 
+    portanto utilizamos a função stringify() para converter os dados em um JSON.
+
+04) Agora vamos testar se as informações já estão sendo armazenadas no localStorage através 
+    do browser. 
+
+    Para saber se tudo está dando certo, 
+    ao adicionarmos uma nova tecnlogia, 
+    ela deverá ser salva no localStorage. 
+
+05) Utilizando o 
+    componentDidMount() para 
+    carregar as tecnologias do localStorage:
+
+    componentDidMount() {
+      // armazenando os dados do localStorage na constante techs.
+      const techs = localStorage.getItem('techs');
+
+      // criando condicional para verificar se a constante techs possui itens dentro dela:
+      if (techs) {
+        // atualizando o estado da propriedade techs, 
+        // fazendo o parse do JSON na constante techs:
+        this.setState({ techs: JSON.parse(techs) });
+      }
+    }

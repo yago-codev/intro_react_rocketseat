@@ -1,0 +1,64 @@
+01) Pra podermos trabalhar com imagens no formato JSX, 
+    precisaremos adicionar os loaders ao Webpack:
+
+    yarn add file-loader -D
+
+02) Agora dentro do arquivo webpack.config.js, 
+    iremos adicionar uma nova rule:
+
+    module.exports = {
+      entry: path.resolve(__dirname, 'src', 'index.js'),
+      output: {
+        path: path.resolve(__dirname, 'public'),
+        filename: 'bundle.js',
+      },
+      devServer: {
+        contentBase: path.resolve(__dirname, 'public'),
+      },
+      module: {
+        rules: [
+          {
+            test: /\.js$/,
+            exclude: /node_modules/,
+            use: {
+              loader: 'babel-loader'
+            },
+          },
+          {
+            test: /\.css/,
+            use: [
+              { loader: 'style-loader' },
+              { loader: 'css-loader' },
+            ],
+          },
+          { <--
+            test: /.*\.(gif|png|jpe?g)$/i, <--
+            use: { <--
+              loader: 'file-loader' <--
+            } <--
+          }, <--
+        ],
+      },
+    };  
+
+03) Agora vamos rodar o servidor:
+
+    yarn dev
+
+04) Agora dentro da pasta src, 
+    iremos criar uma pasta chamada assets
+
+    Dentro dos assets iremos jogar uma imagem qualquer. 
+
+05) Agora dentro do arquivo App.js, 
+    iremos importar a imagem em uma constante:
+
+    import image from './assets/img.png';
+
+06) Inserindo imagem no JSX:
+
+    import image from './assets/img.png';
+
+    function App() {
+      return <img width="100%" src={image} />
+    }

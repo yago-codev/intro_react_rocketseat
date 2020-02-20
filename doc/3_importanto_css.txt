@@ -1,0 +1,64 @@
+01) INSTALANDO OS LOADERS DO WEBPACK:
+
+    yarn add style-loader css-loader -D
+
+02) Configurando Webpack para interpretar e traduzir o CSS do React:
+
+  const path = require('path');
+
+
+  module.exports = {
+    entry: path.resolve(__dirname, 'src', 'index.js'),
+    output: {
+      path: path.resolve(__dirname, 'public'),
+      filename: 'bundle.js',
+    },
+    devServer: {
+      contentBase: path.resolve(__dirname, 'public'),
+    },
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader'
+          },
+        },
+        { <==
+          test: /\.css/, <==
+          use: [ <==
+            { loader: 'style-loader' }, <==
+            { loader: 'css-loader' }, <==
+          ], <==
+        }, <==
+      ],
+    },
+  };  
+
+03) Criar arquivo App.css dentro da pasta src
+
+    Dentro desse arquivo App.css nós iremos fazer o seguinte:
+
+    body {
+      background: #7159c1;
+      color: #FFF;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+04) O loader 'style-loader' irá atuar através do Webpack, 
+    fazendo com que esse código CSS gerado no App.css 
+    seja jogado dentro do arquivo index.html da pasta public. 
+
+    Esse arquivo ficará dentro do <head>,
+    dentro de uma tag <style>
+
+05) O 'css-loader' irá ajudar o Webpack a compreender casos onde 
+    estejamos fazendo a importação de uma imagem através da função url(), por exemplo.
+
+    background-image: url('../images/nome_imagem.jpg');
+
+
+06) Agora vamos importar o App.css dentro do arquivo App.js
+
+    

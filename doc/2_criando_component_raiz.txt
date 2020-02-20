@@ -1,0 +1,88 @@
+01) Dentro de src/index.js 
+    iremos importar o React
+
+    import React from 'react';
+
+02) Importando o render do React-DOM:
+
+    Porque?
+    Pra integrar o React ao Browser, 
+    para ligar o React ao DOM.
+
+    import { render } from 'react-dom';
+
+    Essa função render() é 
+    responsável por renderizar um código/componente do React,
+    dentro de algum conteúdo do HTML. 
+
+03) No arquivo index.html iremos 
+    apagar o h1 que havia sido definido. 
+
+    No lugar dele iremos inserir uma div com id = app
+
+    <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ReactJS</title>
+      </head>
+      <body>
+        <div id="app"></div> <==
+
+        <script src="./bundle.js"></script>
+      </body>
+    </html>
+
+    É dentro dessa 
+    <div id="app"></div>
+    que irá ficar todo o código gerado pelo React.
+
+04) Dentro do arquivo 
+    src/index.js 
+    iremos declarar a função render(),
+    
+    A função render recebe 2 parâmetros:
+
+    O primeiro é o código JSX.
+    O segundo é onde esse código JSX será jogado.
+
+    Como esse script está linkado no index.html,
+    basta utilizarmos um document.getElementById('app');
+
+    render(<h1>Hello World</h1>, document.getElementById('app')); 
+
+05) Uma técnica muito legal que é utilizada no React, 
+    é separar o componente da aplicação, ou seja, 
+    o componente principal da aplicação, o arquivo index.js contendo a função render()...
+    iremos transformar ele em um próprio componente.
+
+    Isso será feito criando um arquivo chamado App.js, 
+    que irá ficar dentro da pasta src.
+
+06) Dentro do arquivo App.js 
+    poderemos gerar o componente de muitas formas distintas. 
+
+    A forma mais fácil de criar um componente React, 
+    é utilizando uma funcão:
+
+    import React from 'react';
+
+    function App() {
+      return <h1>Hello Rocketseat</h1>;
+    }
+
+    export default App;
+
+    OBS: embora não tenhamos utilizado a importação do React, 
+    precisamos importar-lo sempre quando tivermos uma sintaxe JSX.
+
+07) Dentro do arquivo index.js iremos importar o 
+    componente principal:
+
+    import App from './App';
+
+08) Agora iremos passar esse componente como parâmetro para a 
+    função return, utilizando sintaxe de JSX:
+
+    render(< App />, document.getElementById('app')); 

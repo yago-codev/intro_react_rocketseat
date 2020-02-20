@@ -1,0 +1,345 @@
+01) Dentro do Componente TechList, 
+    iremos remover os <li> de dentro do return.
+
+02) Dentro da <ul>, 
+    iremos inserir código JS.
+
+    Para podermos inserir código JS dentro do JSX, 
+    utilizaremos {}
+
+03) O que faremos a seguir é percorrer o array techs que foi definido dentro do estado do componente. 
+
+    class TechList extends Component {
+      state = {
+        techs: [
+          'NodeJS',
+          'ReactJS',
+          'React Native'
+        ]
+      };
+      
+      render() {
+        return(
+          <ul>
+            {this.state.techs.map(tech => <li>{tech}</li>)}; <==
+          </ul>
+        );
+      }
+    }
+
+    O que está sendo feito?
+    Estamos percorrendo o array techs, 
+    e pra cada string de tecnlogia que foi definida dentro de techs, 
+    estamos criando uma <li> contendo a tecnologia em questão. 
+
+    OBS: Ao inspecionarmos o navegador,
+    perceberemos o seguinte warning:
+
+    Warning: Each child in a list should have a unique "key" prop.
+
+    Como resolver?
+    Sempre quando estivermos fazendo um map(), 
+    ou uma iteração, ou uma lista de itens,
+    o primeiro elemento do map() precisará conter uma propriedade chamada key,
+    que irá receber um valor único para cada elemento percorrido. 
+    Ou seja, 
+    o único valor único nessa circunstância que estamos trabalhando agora, é o valor tech.
+    Mas em outros casos, muito provavelmente teríamos de passar o id do elemento que 
+    está vindo de uma listagem dos dados do backend(API consumida).
+    Porém, nesse caso de estudos iniciais, 
+    iremos simular essa situação apenas utilizando o tech, que foi definido dentro do state,
+    já que cada uma dessas strings são únicas, ou seja, os valores não se repetem.
+    Essa propriedade key vai fazer com que o React responsa mais rápido,
+    sabendo qual ítem ele precisa atualizar, remover, adicionar...
+
+    {this.state.techs.map(tech => <li key={tech}>{tech}</li>)}
+
+04) Agora precisamos permitir que o usuário possa inserir novos ítens dentro do estado.
+    Mas como isso é feito?
+
+    Pra isso nós precisaremos de um input de texto. 
+
+    Poderíamos criar um input logo abaixo do ul, 
+    mas o React não permite.
+    Para podermos utilizar duas tags, ou mais, 
+    uma embaixo da outra,
+    precisaremos de um container para envolver essas tags.
+
+    Esse container poderia ser uma div.
+    Mas no React nós utilizaremos outra abordagem. 
+    No React nós utilizamos uma tag chamada FRAGMENT. 
+    A tag FRAGMENT é uma tag sem nome. 
+
+    render() {
+      return(
+        <> <==
+          <ul>
+            {this.state.techs.map(tech => <li key={tech}>{tech}</li>)}
+          </ul>
+          <input type="text"></input>
+        </> <==
+      );
+    }
+
+05) O próximo passo é capturar/pegar o valor que o usuário digitar dentro do input.
+    Existem várias formas de se fazer isso, 
+    porém, a mais utilizada dentro do React é anotar o que o usuário ir digitando dentro do input.
+
+    Para anotarmos essa informação, 
+    criaremos uma nova propriedade dentro do state, 
+    que irá se chamar 
+    newTech: '', 
+
+    state = {
+      newTech: '',
+      techs: [
+        'NodeJS',
+        'ReactJS',
+        'React Native'
+      ]
+    }; 
+
+06) A seguir, 
+    criaremos um método chamado 
+    handleInputChange
+
+    Esse método será escrito no formato de arrow function. 
+
+    class TechList extends Component {
+      state = {
+        newTech: '',
+        techs: [
+          'NodeJS',
+          'ReactJS',
+          'React Native'
+        ]
+      };
+
+      handleInputChange = e => { <==
+        
+      } <==
+      
+      render() {
+        return(
+          <>
+            <ul>
+              {this.state.techs.map(tech => <li key={tech}>{tech}</li>)}
+            </ul>
+            <input type="text"></input>
+          </>
+        );
+      }
+    }
+
+07) Dentro do input nós iremos criar uma propriedade chamada
+    que irá evocar o método que irá capturar o que o usuário digita dentro do input.
+    onChange={this.handleInputChange}
+
+    <input type="text" onChange={this.handleInputChange}></input>
+
+08) Dentro do método handleInputChange nós iremos 
+    dar apenas um console.log:
+
+    handleInputChange = e => {
+      console.log(e.target.value);
+    }
+
+    A partir de agora,
+    quando estivermos digitando no input, 
+    estaremos capturando tudo que for digitado. 
+
+09) A próxima coisa a ser feita é armazenarmos essas 
+    informações capturadas através da digitação do input dentro do estado. 
+
+    É aqui que entenderemos porque o método handleInputChange foi declarado como arrow function,
+    ao invés de utilizar uma named function. 
+
+    ...
+
+    Toda vez que criamos uma funcão própria dentro de um componente de classe, 
+    essa função precisa ser escrita no formato de arrow function, 
+    isso porque se essa função não for escrita no formato de arrow function, 
+    ela nunca terá acesso ao this, 
+    porque named functions possuem o this atrelado ao contexto de quem está executando a função.
+
+    Mas porque precisaremos utilizar o this dentro do método handleInputChange?
+    Porque precisamos armazenar esse parâmetro recebido através do evento onChange, 
+    dentro da propriedade newTech que foi criada dentro do estado. 
+
+    Se tentarmos algo como:
+
+    handleInputChange = e => {
+      this.state.newTech = e.target.value;
+    }
+
+    ISSO NAO IRA FUNCIONAR!!!!!
+
+    Porque?
+    Porque o React traz consigo um conceito chamado imutabilidade, 
+    ou seja, essa variável state é IMUTAVEL, 
+    ela não pode sofrer mutações. 
+
+    Toda vez que precisarmos criar, alterar um estado dentro do React, 
+    nós precisamos utilizar uma função que o componente de classe entrega pra gente, 
+    e essa função se chama setState.
+
+    Dentro do setState nós iremos passar um objeto como parâmetro, 
+    apontando/descrevendo o que queremos criar/alterar dentro do estado. 
+    Ou seja, aqui nós estaremos setando um estado pra propriedade newTech
+
+    handleInputChange = e => {
+      this.setState({ newTech: e.target.value }); <==
+    }
+
+10) Como podemos testar se tudo está funcionando?
+
+    Dentro do return() nós iremos criar um h1, 
+    e dentro desse h1 nós iremos chamar a propriedade newTech, 
+    que por sua vez deverá atualizar o conteúdo do h1 para o valor que for digitado no input. 
+
+      render() {
+        return(
+          <>
+            <h1>{this.state.newTech}</h1>
+            <ul>
+              {this.state.techs.map(tech => <li key={tech}>{tech}</li>)}
+            </ul>
+            <input type="text" onChange={this.handleInputChange}></input>
+          </>
+        );
+      }
+
+      Mas como é que a magia acontece?
+      Toda vez que houver uma modificação no estado do componente, 
+      o método render() é executado automaticamente. 
+
+11) Agora que os testes já foram feitos, 
+    iremos inserir a propriedade value dentro do input do componente, 
+    passando como valor o this.state.newTech.
+
+    Porque?
+    Porque se a propriedade newTech sofrer alterações por qualquer outro motivo, 
+    o input também será atualizado:
+
+    render() {
+      return(
+        <>
+          <h1>{this.state.newTech}</h1>
+          <ul>
+            {this.state.techs.map(tech => <li key={tech}>{tech}</li>)}
+          </ul>
+          <input <==
+            type="text" <==
+            onChange={this.handleInputChange} <==
+            value={this.state.newTech}
+          /> <==
+        </>
+      );
+    }
+
+12) Agora a próxima coisa a ser feita é capturarmos esse 
+    valor que foi digitado pelo usuário, 
+    e armazenarmos esse valor dentro da propriedade tech,
+    ou seja, 
+    pra nosso array de tecnologias que foi criado dentro do estado. 
+
+    Para resolvermos isso, 
+    criaremos um novo método chamado 
+    handleSubmit
+
+    handleSubmit = e => {
+      
+    }
+
+13) Agora nós iremos substituir o fragment por um form:
+
+    Esse form irá conter uma propriedade chamada onSubmit={}.
+    Essa propriedade irá chamar o nosso método handleSubmit.
+
+    render() {
+      return(
+        <form onSubmit={this.handleSubmit}> <==
+          <h1>{this.state.newTech}</h1>
+          <ul>
+            {this.state.techs.map(tech => <li key={tech}>{tech}</li>)}
+          </ul>
+          <input 
+            type="text" 
+            onChange={this.handleInputChange}
+            value={this.state.newTech}
+          />
+        </form> <==
+      );
+    }
+
+14) Esse formulário será disparado através de um button, 
+    então precisamos criar-lo logo abaixo do input:
+
+    render() {
+      return(
+        <form onSubmit={this.handleSubmit}>
+          <h1>{this.state.newTech}</h1>
+          <ul>
+            {this.state.techs.map(tech => <li key={tech}>{tech}</li>)}
+          </ul>
+          <input 
+            type="text" 
+            onChange={this.handleInputChange}
+            value={this.state.newTech}
+          />
+          <button type="submit">Enviar</button> <==
+        </form>
+      );
+    }
+
+15) Agora dentro do método handleSubmit, 
+    iremos user o preventDefault para não dispararmos o envio de informações 
+    logo quando clicarmos no button. 
+    Iremos previnir esse comportamento porque isso faz com que haja um reload no browser. 
+
+    Então vamos ao código de prevenção desse evento:
+
+    handleSubmit = e => {
+      e.preventDefault();
+    }
+
+16) Pronto, 
+    agora só precisamos capturar o valor digitado pelo usuário e 
+    armazenarmos essa informação na propriedade techs
+
+    Sempre quando formos manipular o estado, 
+    trabalhando com arrays e objetos, 
+    é muito importante sabermos de uma regra: 
+    pegando o array de techs como exemplo, 
+    teremos de recriar-lo do zero. 
+    não podemos fazer alterações no array por conta da imutabilidade de estado. 
+    Ou seja,
+    se quisermos pegar o array techs, 
+    pegando todos os valores já existentes nele, 
+    e inserirmos uma nova string como último elemento, 
+    iremos ter que copiar todo o conteúdo de techs:
+
+    handleSubmit = e => {
+      e.preventDefault();
+
+      this.setState({ techs: [...this.state.techs, ] }); <--
+    }
+
+    OBS: logo acima criamos um novo array, 
+    utilizando o spread operator para capturar as informações contidas em techs. 
+
+17) Agora só precisamos adicionar o valor digitado pelo usuário dentro da propriedade techs:
+
+      handleSubmit = e => {
+        e.preventDefault();
+
+        this.setState({ techs: [...this.state.techs, this.state.newTech] });
+      }
+
+18) Agora só precisaremos setar um valor vazio pra string contida na propriedade newTech, 
+    caso contrário nosso input ficará com o value que foi digitado pelo usuário:
+
+    this.setState({ 
+      techs: [...this.state.techs, this.state.newTech],
+      newTech: ''
+    });

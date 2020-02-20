@@ -1,0 +1,182 @@
+01) Inicialmente, 
+    iremos excluir a importação da imagem porque 
+    não iremos utilizar-la. 
+
+02) A seguir iremos criar um novo componente. 
+    Para organizarmos a estrutura do nosso projeto, 
+    iremos criar uma pasta chamada components, 
+    que irá ficar dentro de src:
+
+    src/components
+
+    Dentro dessa pasta irão ficar todos os nossos componentes, 
+    com exceção do componente principal App.js
+
+03) O componente que será criado dentro da pasta components 
+    irá se chamar:
+
+    TechList.js
+
+04) Esse componente TechList.js será escrito em outra sintaxe,
+    não utilizaremos o formato de função para criar esse componente, 
+    aqui nós iremos conhecer um novo tipo de componente, 
+    que é através do formato de Classe. 
+    Ou seja, um Class Component
+
+    class TechList extends Component {
+    
+    }
+
+05) Para retornarmos conteúdo JSX dentro de Componentes de Classe, 
+    precisaremos utilizar o método render(), 
+    que por sua vez irá retornar um método chamado return
+
+    Quando formos retornar conteúdo JSX que possui mais de uma linha, 
+    o método return precisará possuir parênteses,
+    então o conteúdo JSX será inserido dentro desses parênteses.
+
+    class TechList extends Component {
+      render() {
+        return(
+          
+        );
+      }
+    }
+
+06) Escrevendo o JSX:
+
+    class TechList extends Component {
+      render() {
+        return(
+          <ul>
+            <li>NodeJS</li>
+            <li>ReactJS</li>
+            <li>React Native</li>
+          </ul>
+        );
+      }
+    }
+
+07) Exportando o componente:
+
+    import React, { Component } from 'react';
+
+    class TechList extends Component {
+      render() {
+        return(
+          <ul>
+            <li>NodeJS</li>
+            <li>ReactJS</li>
+            <li>React Native</li>
+          </ul>
+        );
+      }
+    }
+
+    export default TechList;
+
+08) Agora será preciso importar o componente TechList dentro do 
+    componente principal, ou seja, o componente App.js
+
+    import TechList from './components/TechList';
+
+09) Agora dentro do componente funcional App(), 
+    iremos utilizar o TechList dentro do return:
+
+    import TechList from './components/TechList';
+
+    function App() {
+      return <TechList />
+    }
+
+10) Qual a diferença entre componente de classe e componente funcional?
+
+    Até pouco tempo atrás, não era possível guardar informações, 
+    ou seja, armazenarmos estado(estado são variáveis que o componente poderá manipular), 
+    dentro de componentes funcionais. 
+
+    A maioria dos componentes escritos em React aos quais veremos em sistemas, 
+    em quase 100% das vezes eles terão sido escritos no formato de Classe. 
+
+    Portanto num primeiro momento nós iremos a fundo para aprender como usar componentes de Classe, 
+    para somente num segundo momento aprendermos a como converter as funcionalidades
+    do componente de Classe para o componente funcional. 
+
+    ...
+
+    A seguir iremos ver como os Estados funcionam na prática, 
+    dentro de um componente de classe. 
+
+    Portanto a primeira coisa a ser feita é declararmos um objeto chamado state:
+
+    class TechList extends Component {
+      state = {}; <==
+      
+      render() {
+        return(
+          <ul>
+            <li>NodeJS</li>
+            <li>ReactJS</li>
+            <li>React Native</li>
+          </ul>
+        );
+      }
+    }
+
+11) Dentro do state nós iremos armazenar/guardar todas as informações que 
+    podem ser manipuladas por esse componente:
+    recebendo novos itens, recebendo mutações...
+
+    Então dentro desse objeto state nós iremos declarar 
+    uma propriedade chamada techs, 
+    que serão as nossas tecnologias, 
+    e essa propriedade techs: irá receber um array.
+
+    class TechList extends Component {
+      state = { <==
+        techs: [ <==
+          'NodeJS', <==
+          'ReactJS', <==
+          'React Native' <==
+        ] <==
+      }; <==
+      
+      render() {
+        return(
+          <ul>
+            <li>NodeJS</li>
+            <li>ReactJS</li>
+            <li>React Native</li>
+          </ul>
+        );
+      }
+    }
+
+12) Para podermos utilizar essa sintaxe de state dentro do Class Component, 
+    precisaremos utilizar um plugin do Babel para 
+    fazer a transpilação desse trecho de código:
+
+    yarn add @babel/plugin-proposal-class-properties -D
+
+13) Agora dentro do arquivo babel.config.js,
+    logo após os presets nós iremos definir uma propriedade chamada plugins
+
+      module.exports = {
+        presets: [
+          "@babel/preset-env",
+          "@babel/preset-react",
+        ],
+        plugins: [
+          '@babel/plugin-proposal-class-properties' <==
+        ]
+      };
+
+14) Pronto, 
+    agora o navegador já está entendendo o código escrito dentro do componente de classe. 
+
+    Tanto é que se formos no arquivo TechList.js, 
+    e dentro do método render() nós declararmos um console.log(this.state), 
+    perceberemos que o navegador irá retornar o nosso array de techs que foi definido dentro do
+    state.
+
+    

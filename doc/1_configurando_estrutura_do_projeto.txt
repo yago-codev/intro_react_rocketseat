@@ -1,0 +1,181 @@
+01) Gerando package.json:
+
+    yarn init -y
+
+02) Istalando bibliotecas:
+
+    - Babel
+
+    - Webpack
+
+    yarn add @babel/core @babel/preset-env @babel/preset-react webpack webpack-cli
+
+03) Instalando bibliotecas 2:
+
+    - React
+
+    - React DOM
+
+    yarn add react react-dom
+
+03) Criando pasta src para armazenar todo o código da aplicação.
+    A pasta vai ficar na raíz do projeto.
+
+    03.1) Criar arquivo index.js dentro da pasta src.
+
+          Esse arquivo index.js é o arquivo de entrada da nossa aplicação.
+          Ou seja, tudo vai partir desse arquivo. 
+
+          Por enquanto iremos inserir uma funcionalidade não comportada pelo JS tradicional, 
+          para vermos como o Webpack irá transpilar o código.
+
+04) Configurando o Babel:
+
+    04.1) Criar arquivo babel.config.js 
+          na raíz do projeto
+
+    04.2) Exportar objeto na sintaxe do CommonJS:
+
+          module.exports = {
+            // quais presets do Babel serão utilizados:
+            presets: [
+              // responsável por alterar as funcionalidades do JS que o navegador ainda não suporta
+              "@babel/preset-env",
+              // responsável por fazer o navegador compreender o React
+              "@babel/preset-react",
+            ],
+          };
+
+05) Configurando o Webpack:
+
+    05.1) Criar arquivo webpack.config.js 
+          na raíz do projeto.
+
+    05.2) Exportar objeto de configuração:
+
+          const path = require('path');
+
+          module.exports = {
+            // arquivo de entrada da aplicação:
+            entry: path.resolve(__dirname, 'src', 'index.js'),
+            // arquivo de saída, ou seja, onde o webpack vai jogar o arquivo do bundle que será feito
+            // para isso iremos criar uma pasta chamada public que vai ficar na raíz do projeto
+            output: {
+              path: path.resolve(__dirname, 'public'),
+              filename: 'bundle.js',
+            },
+            // especificação das regra que vai fazer o babel transpilar arquivo com final .js
+            module: {
+              rules: [
+                {
+                  // vamos passar uma regex para que sejam encontrados os arquivos .js
+                  test: /\.js$/,
+                  // excluir pastas e seus conteúdos do bundle
+                  exclude: /node_modules/,
+                  // instalar o babel-loader:
+                  // yarn add babel-loader -D
+                  use: {
+                    loader: 'babel-loader'
+                  },
+                },
+              ],
+            },
+          };
+
+06) Criar script dentro do package.json:
+
+    "scripts": {
+      "build": "webpack --mode development"
+    },
+
+    Através desse script, 
+    quando rodarmos no terminal o comando:
+
+    yarn build
+
+    Iremos perceber que um arquivo bundle.js foi gerado dentro da pasta public.
+    Esse é o bundle que foi feito com o webpack, 
+    transpilando a arrow function que havíamos criado dentro do arquivo de entrada da pasta src.
+
+07) Criar arquivo index.html 
+    dentro da pasta public
+
+    07.1) Dentro do index.html iremos 
+          criar a estrutura padrão do html, 
+          e no final do body, 
+          iremos importar o script bundle.js.
+
+          Ou seja, 
+          esse arquivo index.html irá receber 
+          todo o código React que será transpilado 
+          através do webpack. 
+
+          Resumindo:
+          dentro da pasta src irão ficar todos os arquivos da aplicação React.
+
+          Dentro da pasta public irão ficar todos os arquivos que irão para o usuário da aplicação. 
+
+    07.2) Dentro do index.html teremos que 
+          declarar uma tag qualquer:
+
+          <h1>Hello World</h1>
+
+08) Instalando biblioteca de desenvolvimento para 
+    montar um "servidor" para ficar assistindo as mudanças na aplicação e 
+    mostrando o resultado em tempo real, ou quase. 
+
+    yarn add webpack-dev-server
+
+09) Dentro do arquivo 
+    webpack.config.js 
+    
+    Iremos criar uma nova propriedade para 
+    configurar o webpack-dev-server:
+
+    module.exports = {
+      entry: path.resolve(__dirname, 'src', 'index.js'),
+      output: {
+        path: path.resolve(__dirname, 'public'),
+        filename: 'bundle.js',
+      },
+      devServer: { <--
+        contentBase: path.resolve(__dirname, 'public'), <--
+      }, <--
+      module: {
+        rules: [
+          {
+            test: /\.js$/,
+            exclude: /node_modules/,
+            use: {
+              loader: 'babel-loader'
+            },
+          },
+        ],
+      },
+    };  
+
+10) Dentro do arquivo package.json, 
+    iremos criar um novo script
+
+    "scripts": {
+      "build": "webpack --mode development",
+      "dev": "webpack-dev-server --mode development"
+    },
+
+    yarn build = vai fazer o bundle/transpilação do código js da pasta src (Código React)
+
+    yarn dev =  vai montar o servidor, abrir o arquivo public/index.html e ficar assistindo as mudanças
+
+11) Explicando o --mode development do package.json:
+
+    O --mode development serve para especificar a forma 
+    como o bundle será gerado. 
+
+    --mode development vai fazer com que 
+    o código gerado ainda seja legível para o desenvolvedor. 
+
+    Caso removessemos o --mode development, 
+    e usássemos o --mode production,
+    o bundle seria gerado de forma minificada, 
+    para reduzir o tamanho do arquivo.
+

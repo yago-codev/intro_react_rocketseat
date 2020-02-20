@@ -1,0 +1,92 @@
+01) Começaremos refatorando a iteração que estamos fazendo na
+    propriedade techs.
+
+    Essa refatoração será feita para podermos quebrar o li em mais de uma linha.
+    Toda vez que formos utilizar JSX em mais de uma linha dentro de uma função, 
+    tal como o map(), precisaremos utilizar parênteses.
+
+    {this.state.techs.map(tech => (
+      <li key={tech}>
+        {tech}
+      </li>
+    ))}
+
+02) Logo abaixo do li iremos inserir um botão. 
+    Esse botão vai servir para fazermos a exclusão do item. 
+
+    Esse botão precisará conter a propriedade type="button", 
+    caso contrário, ele dará submit ao form, 
+    criando novos itens para o newTech.
+
+    {this.state.techs.map(tech => (
+      <li key={tech}>
+        {tech}
+        <button type="button">Remover</button>
+      </li>
+    ))}
+
+03) Dentro desse button nós iremos utilizar a propriedade onClick={} 
+    para dispararmos um evento quando o usuário realizar a ação de clique no botão. 
+
+    {this.state.techs.map(tech => (
+      <li key={tech}>
+        {tech}
+        <button onClick={} type="button">Remover</button>
+      </li>
+    ))}
+
+04) Agora criaremos a função que será atrelada ao onClick.
+    Essa função irá realizar a exclusão/remoção dos itens de dentro 
+    do array techs. 
+
+    handleDelete = () => {
+      
+    }    
+
+    Por enquanto as tecnologias, ou seja, 
+    os itens do array techs ainda não possuem nenhum id,
+    elas possuem apenas o nome.
+    Portanto o que utilizaremos para referenciar cada um
+    desses índices do array será o próprio valor de cada um desses índices. 
+
+    ...
+
+    Agora entra um detalhe e um cuidado que deveremos ter nesse caso. 
+    Dentro da propriedade onClick, 
+    precisaremos criar um arrow function, para somente então evocarmos 
+    a função handleDelete.
+    Se isso não for feito, 
+    a função handleDelete será chamada automaticamente quando 
+    a renderização da DOM for feita,
+    mesmo que o usuário não tenha clicado no botão. 
+    Justamente por isso, iremos atribuir uma arrow function ao onClick,
+    pois desse modo estamos criando uma função própria, 
+    que só será chamada quando o evento de clique acontecer. 
+
+    <button onClick={() => {this.handleDelete(tech)}} type="button">Remover</button>
+
+05) Agora dentro da função handleDelete, 
+    iremos precisar atualizar o estado do array contido em techs, 
+    removendo o item que chamou a função handleDelete. 
+
+    handleDelete = (tech) => {
+      this.setState({ techs: this.state.techs.filter(t => t !== tech) });
+    }
+
+    Ou seja, 
+    estamos usando o setState() para podermos modificar o estado da propriedade 
+    techs quando o item for excluido do array. 
+
+    Essa exclusão será feita utilizando o filter. 
+    Iremos filtrar o array, 
+    pegando tudo aquilo que for diferente do tech, 
+    ou seja, o tech é o próprio elemento que foi clicado e que 
+    será removido do array.
+
+    handleDelete = (tech) => {
+      this.setState({ techs: this.state.techs.filter(t => t !== tech) });
+    }
+
+    Pronto, 
+    agora cada elemento clicado não será incluso quando a 
+    nova atualização do array for feita!!!
